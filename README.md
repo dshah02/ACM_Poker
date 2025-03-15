@@ -37,14 +37,7 @@ To run a demonstration of the poker game with visual interface:
 python game.py
 ```
 
-This will run a visual demonstration match between the example bots.
-
-You can also modify parameters to customize your games:
-
-```bash
-# Run a visual game with custom settings
-python game.py --hands 10 --delay 0.5 --fullscreen
-```
+This will run a visual demonstration match between the example bots, one of which is a bot you can control manually.
 
 ## System Components
 
