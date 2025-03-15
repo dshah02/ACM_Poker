@@ -11,6 +11,7 @@ This framework provides:
 3. Example bot strategies to demonstrate the API
 4. A tournament manager to run matches and competitions
 5. A visual interface using Pygame to display poker matches
+6. Predefined poker rounds for testing and debugging
 
 ## Getting Started
 
@@ -18,6 +19,7 @@ This framework provides:
 
 - Python 3.6 or higher
 - Pygame (for visualization features)
+- tqdm (for progress bars)
 
 ### Installation 
 
@@ -29,7 +31,7 @@ pip install pygame tqdm
 
 ### Running the Demo
 
-To run a demonstration of the poker system, simply execute:
+To run a demonstration of the poker game with visual interface:
 
 ```bash
 python game.py
@@ -37,30 +39,16 @@ python game.py
 
 This will run a visual demonstration match between the example bots.
 
-You can also modify the main block in `poker_tournament.py` to run other types of demonstrations:
+You can also modify parameters to customize your games:
 
-```python
-# Option 1: Run a detailed hand for debugging
-run_detailed_hand(bot1, bot2)
-
-# Option 2: Run a match
-tournament = PokerTournament()
-tournament.run_match(bot1, bot2, num_hands=10)
-
-# Option 3: Run a tournament
-tournament = PokerTournament()
-tournament.run_tournament([bot1, bot2], num_matches=2, hands_per_match=10)
-
-# Option 4: Run a visual demo match
-run_visual_demo(delay=0.5)
-
-# Option 5: Run a tournament with visual finals
-run_visual_tournament([bot1, bot2], matches_per_pair=1, hands_per_match=5, delay=0.5)
+```bash
+# Run a visual game with custom settings
+python game.py --hands 10 --delay 0.5 --fullscreen
 ```
 
 ## System Components
 
-### Poker Engine (`poker_engine.py`)
+### Poker Engine (`src/poker_engine.py`)
 
 The core game engine that implements Texas Hold'em rules:
 - Manages game state
@@ -77,23 +65,27 @@ Provides functionality to evaluate poker hands:
 - Compares hands to determine the winner
 - Calculates preflop hand strength
 - Provides percentile rankings for preflop hands
+- Calculates head-to-head equity
 
-### Example Strategies
+### Bot Strategies
 
-Two example bot strategies are provided:
+Several example bot strategies are provided:
 
-1. **Conservative Bot** (`example_strategy_1.py`): A cautious bot that plays based on hand strength and folds weaker hands
-2. **Aggressive Bot** (`example_strategy_2.py`): A more aggressive bot that bluffs frequently and plays more hands
+1. **Conservative Bot** (`strategy/example_strategy_1.py`): A cautious bot that plays based on hand strength and folds weaker hands
+2. **Aggressive Bot** (`strategy/example_strategy_2.py`): A more aggressive bot that bluffs frequently and plays more hands
+3. **Simple Bot** (`strategy/example_strategy_0.py`): A basic bot for demonstration purposes
+4. **Human Player** (`strategy/human_strategy.py`): Allows human players to compete against bots
 
-### Tournament Manager (`poker_tournament.py`)
+### Tournament Manager (`src/poker_tournament.py`)
 
 Manages matches and tournaments:
 - Runs individual matches
 - Conducts round-robin tournaments
 - Tracks and reports results
 - Can run visual matches with Pygame
+- Supports alternating starting positions
 
-### Visualization (`poker_visualizer.py`)
+### Visualization (`src/poker_visualizer.py`)
 
 A Pygame-based visualization system that:
 - Displays cards, chips, and the poker table
@@ -101,6 +93,13 @@ A Pygame-based visualization system that:
 - Dramatizes important moments like showdowns
 - Displays hand strength and percentile rankings
 - Provides a UI for tournament finals
+
+### Predefined Poker Rounds (`poker_rounds/`)
+
+The framework includes predefined poker round configurations for:
+- Testing specific scenarios
+- Ensuring consistent testing across different bot implementations
+- Debugging bot behavior in specific situations
 
 ## Creating Your Own Bot
 
@@ -111,6 +110,8 @@ To create your own poker bot:
    - `__init__(self, name)`: Constructor that accepts a name parameter
    - `__str__(self)`: Return the bot's name
    - `get_action(self, game_state)`: Return the bot's action based on the current game state
+
+A bot template is provided in `strategy/bot_template.py` to help you get started.
 
 ### Bot Interface
 
@@ -181,14 +182,46 @@ class MyPokerBot:
             return {'action': 'call'}
 ```
 
+## Testing Your Bot
+
+You can test your bot in several ways:
+
+1. **Standard Tournament**: Run a tournament against the provided example bots
+2. **Custom Scenarios**: Test against specific poker rounds in the `poker_rounds/` directory
+3. **Visual Match**: Watch your bot play in the visual interface
+4. **Play Against Your Bot**: Use the human player interface to play against your bot
+
+### Testing with Predefined Rounds
+
+The `poker_rounds/` directory contains JSON files with specific card configurations that can be used for testing and debugging:
+
+```python
+# Example of using a predefined round for testing
+from src.poker_engine import PokerEngine
+from src.utils import load_cards_from_json
+
+# Load predefined cards
+round_cards = load_cards_from_json("poker_rounds/round_1_cards.json")
+
+# Initialize engine with predefined cards
+engine = PokerEngine(
+    player1_bot=my_bot,
+    player2_bot=opponent_bot,
+    predefined_cards=round_cards
+)
+
+# Run the game
+result = engine.play_hand()
+```
+
 ## Running Your Own Tournament
 
 To run a tournament with your own bots:
 
 ```python
-from poker_tournament import PokerTournament
+from src.poker_tournament import PokerTournament
 from my_bot import MyPokerBot
-from example_strategy_1 import ConservativeBot
+from strategy.example_strategy_1 import ConservativeBot
 
 # Create bot instances
 my_bot = MyPokerBot("MyAwesomeBot")
@@ -213,9 +246,10 @@ tournament.run_tournament(bots, num_matches=5, hands_per_match=50, visualize_fin
 For a more engaging experience, you can run matches with visual display:
 
 ```python
-from poker_tournament import run_visual_match, run_visual_tournament
+from src.poker_visualizer import run_visual_match
+from src.poker_tournament import run_visual_tournament
 from my_bot import MyPokerBot
-from example_strategy_1 import ConservativeBot
+from strategy.example_strategy_1 import ConservativeBot
 
 # Create bot instances
 my_bot = MyPokerBot("MyAwesomeBot")
@@ -227,6 +261,16 @@ run_visual_match(my_bot, opponent, hands=5, delay=0.5)
 # Run a tournament with visualization for the finals
 run_visual_tournament([my_bot, opponent], matches_per_pair=2, hands_per_match=10, delay=0.5)
 ```
+
+## Playing Against a Bot
+
+You can also play against a bot yourself:
+
+```bash
+python -m src.play_against_bot
+```
+
+This launches an interactive interface where you can play Texas Hold'em against any of the implemented bots.
 
 ## Visualization Controls
 
@@ -241,7 +285,7 @@ When running a visualization:
 The `hand_evaluator.py` module provides useful functions for evaluating poker hands:
 
 ```python
-from hand_evaluator import calculate_preflop_strength, preflop_percentile, preflop_rank_description
+from hand_evaluator import calculate_preflop_strength, preflop_percentile, preflop_rank_description, calculate_head_to_head_equity
 
 # Get the preflop strength of a hand (0.0 - 1.0)
 strength = calculate_preflop_strength(['Ah', 'Kh'], style='balanced')
@@ -249,7 +293,10 @@ strength = calculate_preflop_strength(['Ah', 'Kh'], style='balanced')
 # Get the percentile of a preflop hand (0.0 - 1.0)
 percentile = preflop_percentile(['Ah', 'Kh'])
 
-# Get a description of a preflop hand
-rank, description = preflop_rank_description(['Ah', 'Kh'])
-print(f"{rank} - {description}")  # Example: "Premium hand - Suited Ace-King"
+# Calculate equity between two hands
+equity = calculate_head_to_head_equity(['Ah', 'Kh'], ['Qd', 'Jd'])
 ```
+
+## Contributing
+
+Contributions to the ACM Poker Bot Competition framework are welcome! Feel free to submit pull requests with bug fixes, improvements, or new bot strategies.
