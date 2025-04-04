@@ -203,7 +203,7 @@ class PokerVisualizer:
             
             # Wait for key press (giving time to edit the JSON if desired)
             self.wait_for_key()
-            time.sleep(delay)
+            self.wait_with_events(delay)
             
             # Run a hand with visualization
             winner = self.run_visual_hand()
@@ -303,7 +303,7 @@ class PokerVisualizer:
                           self.large_font, centered=True, color=GOLD)
             # Make sure everything is drawn before pausing
             pygame.display.flip()
-            time.sleep(self.animation_speed * 3)
+            self.wait_with_events(self.animation_speed * 3)
             
             self.winner = ante_winner
             return ante_winner
@@ -330,7 +330,7 @@ class PokerVisualizer:
         self.draw_pot()
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Now reveal the hole cards
         self.clear_screen()
@@ -340,7 +340,7 @@ class PokerVisualizer:
         self.draw_pot()
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
         # Pre-flop betting round
         print("\nPRE-FLOP BETTING:")
@@ -439,7 +439,7 @@ class PokerVisualizer:
         self.draw_text("Pre-Flop Betting", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Execute the betting round
         winner = self._visual_betting_round('preflop')
@@ -456,7 +456,7 @@ class PokerVisualizer:
         self.draw_text("Dealing Flop", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Deal flop (3 cards)
         self.engine._deal_flop()
@@ -471,7 +471,7 @@ class PokerVisualizer:
         self.draw_text("Flop Dealt", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
     def _visual_flop_betting(self):
         """Execute flop betting with visualization"""
@@ -484,7 +484,7 @@ class PokerVisualizer:
         self.draw_text("Flop Betting", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Execute the betting round
         winner = self._visual_betting_round('flop')
@@ -502,7 +502,7 @@ class PokerVisualizer:
         self.draw_text("Dealing Turn", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Deal turn (1 card)
         self.engine._deal_turn()
@@ -517,7 +517,7 @@ class PokerVisualizer:
         self.draw_text("Turn Dealt", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
     def _visual_turn_betting(self):
         """Execute turn betting with visualization"""
@@ -530,7 +530,7 @@ class PokerVisualizer:
         self.draw_text("Turn Betting", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Execute the betting round
         winner = self._visual_betting_round('turn')
@@ -548,7 +548,7 @@ class PokerVisualizer:
         self.draw_text("Dealing River", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Deal river (1 card)
         self.engine._deal_river()
@@ -563,7 +563,7 @@ class PokerVisualizer:
         self.draw_text("River Dealt", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
     def _visual_river_betting(self):
         """Execute river betting with visualization"""
@@ -576,7 +576,7 @@ class PokerVisualizer:
         self.draw_text("River Betting", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed)
+        self.wait_with_events(self.animation_speed)
         
         # Execute the betting round
         winner = self._visual_betting_round('river')
@@ -595,7 +595,7 @@ class PokerVisualizer:
         self.draw_text("Showdown", SCREEN_WIDTH // 2, 80, self.large_font, centered=True, color=GOLD)
         # Make sure everything is drawn before pausing
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
         # Evaluate hands
         player1 = self.engine.players[0]
@@ -620,7 +620,7 @@ class PokerVisualizer:
         self.draw_text(f"{player1}: {hand_type_str(best_hand1)}", 250, SCREEN_HEIGHT - 220, self.medium_font, color=WHITE)
         self.draw_text(f"{player2}: {hand_type_str(best_hand2)}", SCREEN_WIDTH - 250, 80, self.medium_font, color=WHITE)
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
         # Compare hands and determine winner
         result = compare_hands(best_hand1, best_hand2)
@@ -632,7 +632,7 @@ class PokerVisualizer:
             prev_pot = self.pot_display
             self.draw_text(f"Pot: {prev_pot} → transferred to {winner}", SCREEN_WIDTH // 2, 210, self.medium_font, centered=True, color=GOLD)
             pygame.display.flip()
-            time.sleep(self.animation_speed * 2)
+            self.wait_with_events(self.animation_speed * 2)
             
             # Transfer pot and update display
             self.engine._end_round(winner)
@@ -644,7 +644,7 @@ class PokerVisualizer:
             prev_pot = self.pot_display
             self.draw_text(f"Pot: {prev_pot} → transferred to {winner}", SCREEN_WIDTH // 2, 210, self.medium_font, centered=True, color=GOLD)
             pygame.display.flip()
-            time.sleep(self.animation_speed * 2)
+            self.wait_with_events(self.animation_speed * 2)
             
             # Transfer pot and update display
             self.engine._end_round(winner)
@@ -658,7 +658,7 @@ class PokerVisualizer:
             # Show pot splitting animation
             self.draw_text(f"Pot: {prev_pot} → split equally ({split_amount} each)", SCREEN_WIDTH // 2, 210, self.medium_font, centered=True, color=GOLD)
             pygame.display.flip()
-            time.sleep(self.animation_speed * 2)
+            self.wait_with_events(self.animation_speed * 2)
             
             # Actually split the pot
             self.engine.stacks[player1] += split_amount
@@ -671,7 +671,7 @@ class PokerVisualizer:
             
             self.pot_display = 0
             pygame.display.flip()
-            time.sleep(self.animation_speed * 2)
+            self.wait_with_events(self.animation_speed * 2)
             return None
             
         # Final display with updated stacks
@@ -689,7 +689,7 @@ class PokerVisualizer:
         else:
             self.draw_text("SPLIT POT", SCREEN_WIDTH // 2, 160, self.large_font, centered=True, color=GOLD)
         pygame.display.flip()
-        time.sleep(self.animation_speed * 2)
+        self.wait_with_events(self.animation_speed * 2)
         
         return player1 if result > 0 else player2 if result < 0 else None
     
@@ -753,7 +753,7 @@ class PokerVisualizer:
             pygame.display.flip()
             
             # Slight pause for drama
-            time.sleep(self.animation_speed)
+            self.wait_with_events(self.animation_speed)
             
             # Get player action
             player_view = self.engine._get_player_view(current_player)
@@ -814,7 +814,7 @@ class PokerVisualizer:
             pygame.display.flip()
             
             # Pause to show the action
-            time.sleep(self.animation_speed * 1.5)
+            self.wait_with_events(self.animation_speed * 1.5)
             
             if folded:
                 # If player folded, other player wins
@@ -844,7 +844,7 @@ class PokerVisualizer:
                 
                 # Make sure everything is drawn before pausing
                 pygame.display.flip()
-                time.sleep(self.animation_speed * 2)
+                self.wait_with_events(self.animation_speed * 2)
                 
                 return winner
                 
@@ -1075,6 +1075,13 @@ class PokerVisualizer:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
     
+    def wait_with_events(self, duration):
+        """Wait for a specified duration while still checking for events"""
+        start_time = time.time()
+        while time.time() - start_time < duration and self.running:
+            self.check_events()
+            pygame.time.wait(10)  # Short sleep to avoid CPU hogging
+
     def quit(self):
         """Quit pygame"""
         pygame.quit()
